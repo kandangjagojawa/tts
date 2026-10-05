@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="jv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTS Aksara Jawa</title>
+  <link rel="stylesheet" href="tts.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>Teka-Teki Silang Aksara Jawa</h1>
+      <p>Pilih kothak lan ketik aksara ngginakaken papan ketik ing andhap.</p>
+    </header>
+
+    <main class="app-layout">
+      <!-- Area Kiri: Grid dan Keyboard -->
+      <section class="board-section">
+        <div id="crossword-grid" class="grid-container"></div>
+        
+        <div class="keyboard-container">
+          <div class="keyboard-header">
+            <span>Papan Ketik Suku Kata (Wanda)</span>
+            <button id="btn-clear" class="btn-clear">Hapus Sel</button>
+          </div>
+          <div id="keyboard-keys" class="keyboard-grid"></div>
+        </div>
+      </section>
+
+      <!-- Area Kanan: Petunjuk Soal -->
+      <section class="clues-section">
+        <div class="clues-box">
+          <h2>Mendatar</h2>
+          <ol id="clue-list-across" class="clue-list"></ol>
+        </div>
+        <div class="clues-box">
+          <h2>Menurun</h2>
+          <ol id="clue-list-down" class="clue-list"></ol>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="tts.js"></script>
+</body>
+</html>
