@@ -5,12 +5,16 @@
 }
 
 :root {
-  --bg-color: #F4ECD8; /* Krem Perkamen */
-  --text-main: #3E2723; /* Cokelat Gelap */
+  --bg-color: #F4ECD8; /* Krem Perkamen Klasik */
+  --text-main: #3E2723; /* Cokelat Kayu Gelap */
   --accent-color: #8D6E63;
   --cell-bg: #FFF8E7;
-  --cell-focus: #D7CCC8;
+  --cell-focus: #E0D0B8;
   --cell-correct: #C8E6C9;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
@@ -29,21 +33,38 @@ body {
 
 .app-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 }
 
 .app-header h1 {
-  font-family: 'Ngayogyan', serif; /* Judul bernuansa aksara */
+  font-family: 'Ngayogyan', serif;
   font-size: 2.5rem;
-  margin: 0 0 10px 0;
+  margin: 0 0 5px 0;
   letter-spacing: 2px;
+}
+
+.btn-main-lagi {
+  background-color: #5D4037;
+  color: #FFF8E7;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.btn-main-lagi:hover {
+  background-color: #3E2723;
 }
 
 .app-layout {
   display: flex;
-  gap: 40px;
+  gap: 30px;
   flex-wrap: wrap;
   align-items: flex-start;
 }
@@ -51,7 +72,7 @@ body {
 /* Grid Crossword */
 .board-section {
   flex: 1;
-  min-width: 320px;
+  min-width: 330px;
 }
 
 .grid-container {
@@ -61,17 +82,19 @@ body {
   padding: 4px;
   border-radius: 8px;
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
 }
 
+/* Ukuran Sel Diperbesar Sedikit & Overflow Visible Agar Sandhangan Tidak Terpotong */
 .cell-wrapper {
-  width: 45px;
-  height: 45px;
-  background-color: #2b1b17; /* Warna sel kosong */
+  width: 52px;
+  height: 52px;
+  background-color: #2b1b17;
   position: relative;
+  overflow: visible;
 }
 
 .cell-wrapper.active {
@@ -94,12 +117,18 @@ body {
   height: 100%;
   border: none;
   background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-family: 'Ngayogyan', serif;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
+  line-height: 1.1;
   color: var(--text-main);
   outline: none;
   cursor: pointer;
+  padding: 2px 0 0 0;
+  overflow: visible;
 }
 
 .cell-input:focus {
@@ -138,14 +167,14 @@ body {
 .clue-list {
   padding-left: 20px;
   line-height: 1.5;
+  margin-bottom: 0;
 }
 
 .clue-list li {
-  margin-bottom: 10px;
-  cursor: pointer;
+  margin-bottom: 8px;
 }
 
-/* Keyboard Virtual */
+/* Keyboard Virtual (Presisi Tanpa Potong Aksara) */
 .keyboard-container {
   background-color: #FFF8E7;
   border: 1px solid var(--accent-color);
@@ -157,7 +186,8 @@ body {
 .keyboard-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
+  align-items: center;
+  margin-bottom: 12px;
   font-weight: bold;
 }
 
@@ -165,30 +195,103 @@ body {
   background-color: #D84315;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 12px;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .keyboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   gap: 8px;
 }
 
 .key-btn {
   font-family: 'Ngayogyan', serif;
   font-size: 1.5rem;
-  height: 45px;
+  height: 50px;
   background-color: white;
   border: 1px solid var(--accent-color);
   border-radius: 6px;
   color: var(--text-main);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  line-height: 1.1;
   transition: all 0.1s;
+  overflow: visible;
 }
 
 .key-btn:active {
   transform: scale(0.95);
   background-color: var(--cell-focus);
+}
+
+/* Modal Popup Victory */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.modal-overlay.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-card {
+  background-color: #FFF8E7;
+  border: 2px solid var(--accent-color);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.modal-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.modal-card h2 {
+  font-family: 'Ngayogyan', serif;
+  margin: 0 0 10px 0;
+  font-size: 1.8rem;
+  color: var(--text-main);
+}
+
+.modal-card p {
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.btn-primary {
+  background-color: #2E7D32;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #1B5E20;
 }
