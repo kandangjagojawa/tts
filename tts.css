@@ -323,4 +323,20 @@ body {
   .grid-container {
     max-width: 100%; /* Memenuhi lebar layar HP secara proporsional */
   }
+
+  /* Footer Styling */
+.app-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid var(--accent-color);
+  font-size: 0.9rem;
+  color: var(--text-main);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.app-footer p {
+  margin: 0;
+}
 }
