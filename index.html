@@ -10,7 +10,8 @@
   <div class="app-container">
     <header class="app-header">
       <h1>Teka-Teki Silang Aksara Jawa</h1>
-      <p>Pilih kothak lan ketik aksara ngginakaken papan ketik ing andhap.</p>
+      <p>Isi kothak ngginakaken papan ketik ing andhap.</p>
+      <button id="btn-reload-header" class="btn-main-lagi">🔄 Acak / TTS Anyar</button>
     </header>
 
     <main class="app-layout">
@@ -39,6 +40,16 @@
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- Modal Kemenangan / Selesai -->
+  <div id="victory-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-icon">🎉</div>
+      <h2>Rahayu! Sampun Jangkep!</h2>
+      <p>Sugeng! Sedaya wangsulan sampun terisi lan leres sedaya.</p>
+      <button id="btn-restart-modal" class="btn-primary">Main Lagi (TTS Anyar)</button>
+    </div>
   </div>
 
   <script src="tts.js"></script>
