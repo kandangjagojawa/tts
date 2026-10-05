@@ -207,7 +207,7 @@ function drawGrid(layout) {
   sorted.forEach(w => {
     const li = document.createElement('li');
     li.value = w.num;
-    li.textContent = `${w.clue} (${w.syllables.length} wanda)`;
+    li.textContent = w.clue;
     if(w.dir === 'across') uiAcross.appendChild(li);
     else uiDown.appendChild(li);
   });
