@@ -1,297 +1,292 @@
-@font-face {
-  font-family: 'Ngayogyan';
-  src: url('./ngayogyann.ttf') format('truetype');
-  font-display: swap;
+class EngineTTS {
+  constructor(size) {
+    this.size = size;
+    this.matrix = Array.from({ length: size }, () => Array(size).fill(null));
+    this.items = [];
+  }
+
+  build(words) {
+    let bestResult = { matrix: [], items: [] };
+    
+    // Coba susun acak hingga 40 kali untuk mendapatkan kepadatan kata terbaik
+    for(let tryCount = 0; tryCount < 40; tryCount++) {
+      this.matrix = Array.from({ length: this.size }, () => Array(this.size).fill(null));
+      this.items = [];
+      
+      const shuffled = [...words].sort(() => Math.random() - 0.5);
+      shuffled.sort((a, b) => b.syllables.length - a.syllables.length);
+      
+      if(shuffled.length === 0) break;
+
+      // Kata pertama ditempatkan secara acak di area tengah
+      const first = shuffled[0];
+      const sRow = Math.floor(this.size / 2) + Math.floor(Math.random() * 2 - 1);
+      const sCol = Math.max(0, Math.floor((this.size - first.syllables.length) / 2));
+      this.insertWord(first, sRow, sCol, Math.random() > 0.5 ? 'across' : 'down');
+      
+      // Susun sisa kata
+      for(let i = 1; i < shuffled.length; i++) {
+        this.attemptIntersect(shuffled[i]);
+      }
+      
+      if(this.items.length > bestResult.items.length) {
+        bestResult = { 
+          matrix: JSON.parse(JSON.stringify(this.matrix)), 
+          items: [...this.items] 
+        };
+      }
+    }
+    return bestResult;
+  }
+
+  attemptIntersect(word) {
+    const spots = [];
+    for(let r = 0; r < this.size; r++) {
+      for(let c = 0; c < this.size; c++) {
+        const cell = this.matrix[r][c];
+        if(!cell) continue;
+        
+        word.syllables.forEach((syl, idx) => {
+          if(cell.syll === syl) {
+            const dir = cell.dir === 'across' ? 'down' : 'across';
+            const startR = dir === 'down' ? r - idx : r;
+            const startC = dir === 'across' ? c - idx : c;
+            
+            if(this.isValidFit(word, startR, startC, dir)) {
+              spots.push({r: startR, c: startC, dir});
+            }
+          }
+        });
+      }
+    }
+    
+    if(spots.length > 0) {
+      const pick = spots[Math.floor(Math.random() * spots.length)];
+      this.insertWord(word, pick.r, pick.c, pick.dir);
+    }
+  }
+
+  isValidFit(word, r, c, dir) {
+    const len = word.syllables.length;
+    if(dir === 'across' && (c < 0 || c + len > this.size || r < 0 || r >= this.size)) return false;
+    if(dir === 'down' && (r < 0 || r + len > this.size || c < 0 || c >= this.size)) return false;
+
+    for(let i = 0; i < len; i++) {
+      const cr = dir === 'down' ? r + i : r;
+      const cc = dir === 'across' ? c + i : c;
+      const cell = this.matrix[cr][cc];
+      
+      if(cell !== null) {
+        if(cell.syll !== word.syllables[i]) return false;
+      } else {
+        if(!this.checkClearance(cr, cc, dir, i === 0, i === len - 1)) return false;
+      }
+    }
+    return true;
+  }
+
+  checkClearance(r, c, dir, isStart, isEnd) {
+    if(isStart) {
+      const pr = dir === 'down' ? r - 1 : r;
+      const pc = dir === 'across' ? c - 1 : c;
+      if(this.inBound(pr, pc) && this.matrix[pr][pc] !== null) return false;
+    }
+    if(isEnd) {
+      const nr = dir === 'down' ? r + 1 : r;
+      const nc = dir === 'across' ? c + 1 : c;
+      if(this.inBound(nr, nc) && this.matrix[nr][nc] !== null) return false;
+    }
+    const sr1 = dir === 'across' ? r - 1 : r;
+    const sc1 = dir === 'across' ? c : c - 1;
+    const sr2 = dir === 'across' ? r + 1 : r;
+    const sc2 = dir === 'across' ? c : c + 1;
+    
+    if(this.inBound(sr1, sc1) && this.matrix[sr1][sc1] !== null) return false;
+    if(this.inBound(sr2, sc2) && this.matrix[sr2][sc2] !== null) return false;
+    
+    return true;
+  }
+
+  inBound(r, c) {
+    return r >= 0 && r < this.size && c >= 0 && c < this.size;
+  }
+
+  insertWord(word, r, c, dir) {
+    word.syllables.forEach((syl, i) => {
+      const cr = dir === 'down' ? r + i : r;
+      const cc = dir === 'across' ? c + i : c;
+      this.matrix[cr][cc] = { syll: syl, id: word.id, dir };
+    });
+    this.items.push({ ...word, r, c, dir });
+  }
 }
 
-:root {
-  --bg-color: #F4ECD8; /* Krem Perkamen Klasik */
-  --text-main: #3E2723; /* Cokelat Kayu Gelap */
-  --accent-color: #8D6E63;
-  --cell-bg: #FFF8E7;
-  --cell-focus: #E0D0B8;
-  --cell-correct: #C8E6C9;
+// Global Application Controller
+let currentFocus = null;
+let globalWordBank = [];
+
+async function initApp() {
+  try {
+    const res = await fetch('./tts.json');
+    const data = await res.json();
+    globalWordBank = data.wordBank || [];
+    
+    startNewGame();
+    setupEventListeners();
+  } catch(err) {
+    console.error("Gagal memuat tts.json:", err);
+    document.getElementById('crossword-grid').innerHTML = "<p style='color:white;padding:10px;'>Gagal memuat data tts.json.</p>";
+  }
 }
 
-* {
-  box-sizing: border-box;
+function startNewGame() {
+  // Sembunyikan modal kemenangan jika sedang tampil
+  document.getElementById('victory-modal').classList.add('hidden');
+  
+  // Acak & ambil sampel kata (15-20 kata) dari total 50 kata agar susunan sel selalu baru
+  const randomSample = [...globalWordBank].sort(() => Math.random() - 0.5).slice(0, 18);
+  
+  const engine = new EngineTTS(10);
+  const layout = engine.build(randomSample);
+  
+  drawGrid(layout);
+  drawKeyboard(layout);
+  currentFocus = null;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-main);
+function drawGrid(layout) {
+  const container = document.getElementById('crossword-grid');
+  const uiAcross = document.getElementById('clue-list-across');
+  const uiDown = document.getElementById('clue-list-down');
+  
+  container.innerHTML = '';
+  uiAcross.innerHTML = '';
+  uiDown.innerHTML = '';
+  
+  const size = layout.matrix.length;
+  container.style.gridTemplateColumns = `repeat(${size}, 52px)`;
+  
+  const sorted = [...layout.items].sort((a,b) => a.r === b.r ? a.c - b.c : a.r - b.r);
+  const numDict = {};
+  let counter = 1;
+  
+  sorted.forEach(w => {
+    const k = `${w.r}-${w.c}`;
+    if(!numDict[k]) numDict[k] = counter++;
+    w.num = numDict[k];
+  });
+
+  for(let r = 0; r < size; r++) {
+    for(let c = 0; c < size; c++) {
+      const cellData = layout.matrix[r][c];
+      const div = document.createElement('div');
+      div.className = 'cell-wrapper';
+      
+      if(cellData) {
+        div.classList.add('active');
+        const k = `${r}-${c}`;
+        if(numDict[k]) {
+          const sp = document.createElement('span');
+          sp.className = 'cell-number';
+          sp.textContent = numDict[k];
+          div.appendChild(sp);
+        }
+        
+        const inp = document.createElement('input');
+        inp.className = 'cell-input';
+        inp.dataset.ans = cellData.syll;
+        inp.readOnly = true;
+        
+        inp.addEventListener('focus', () => currentFocus = inp);
+        div.appendChild(inp);
+      }
+      container.appendChild(div);
+    }
+  }
+
+  sorted.forEach(w => {
+    const li = document.createElement('li');
+    li.value = w.num;
+    li.textContent = `${w.clue} (${w.syllables.length} wanda)`;
+    if(w.dir === 'across') uiAcross.appendChild(li);
+    else uiDown.appendChild(li);
+  });
 }
 
-.app-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
+function drawKeyboard(layout) {
+  const kb = document.getElementById('keyboard-keys');
+  kb.innerHTML = '';
+  
+  const wandaSet = new Set();
+  layout.items.forEach(w => w.syllables.forEach(s => wandaSet.add(s)));
+  
+  // Tambahan opsi pengacau umum
+  ['ꦏ', 'ꦭ', 'ꦩ', 'ꦒ', 'ꦧ', 'ꦠ', 'ꦱ', 'ꦤ'].forEach(d => wandaSet.add(d));
+  
+  const arrWanda = Array.from(wandaSet).sort(() => Math.random() - 0.5);
+  
+  arrWanda.forEach(wanda => {
+    const btn = document.createElement('button');
+    btn.className = 'key-btn';
+    btn.textContent = wanda;
+    
+    btn.onclick = () => {
+      if(currentFocus) {
+        currentFocus.value = wanda;
+        checkCellAnswer(currentFocus);
+        autoAdvanceFocus();
+        checkGameCompletion();
+      }
+    };
+    kb.appendChild(btn);
+  });
 }
 
-.app-header {
-  text-align: center;
-  margin-bottom: 25px;
-  border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 15px;
+function checkCellAnswer(input) {
+  if(input.value === input.dataset.ans) {
+    input.classList.add('correct');
+  } else {
+    input.classList.remove('correct');
+  }
 }
 
-.app-header h1 {
-  font-family: 'Ngayogyan', serif;
-  font-size: 2.5rem;
-  margin: 0 0 5px 0;
-  letter-spacing: 2px;
+function autoAdvanceFocus() {
+  const inputs = Array.from(document.querySelectorAll('.cell-input'));
+  const idx = inputs.indexOf(currentFocus);
+  if(idx !== -1 && idx + 1 < inputs.length) {
+    inputs[idx + 1].focus();
+  }
 }
 
-.btn-main-lagi {
-  background-color: #5D4037;
-  color: #FFF8E7;
-  border: none;
-  padding: 8px 16px;
-  font-size: 0.95rem;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: background-color 0.2s;
+// Pengecekan Apakah Semua Sel Sudah Terisi Benar
+function checkGameCompletion() {
+  const inputs = document.querySelectorAll('.cell-input');
+  if(inputs.length === 0) return;
+  
+  let allCorrect = true;
+  inputs.forEach(inp => {
+    if(inp.value !== inp.dataset.ans) {
+      allCorrect = false;
+    }
+  });
+
+  if(allCorrect) {
+    setTimeout(() => {
+      document.getElementById('victory-modal').classList.remove('hidden');
+    }, 300);
+  }
 }
 
-.btn-main-lagi:hover {
-  background-color: #3E2723;
+function setupEventListeners() {
+  document.getElementById('btn-clear').onclick = () => {
+    if(currentFocus) {
+      currentFocus.value = '';
+      currentFocus.classList.remove('correct');
+    }
+  };
+  
+  document.getElementById('btn-reload-header').onclick = startNewGame;
+  document.getElementById('btn-restart-modal').onclick = startNewGame;
 }
 
-.app-layout {
-  display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-/* Grid Crossword */
-.board-section {
-  flex: 1;
-  min-width: 330px;
-}
-
-.grid-container {
-  display: grid;
-  gap: 2px;
-  background-color: var(--text-main);
-  padding: 4px;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-  margin-bottom: 25px;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Ukuran Sel Diperbesar Sedikit & Overflow Visible Agar Sandhangan Tidak Terpotong */
-.cell-wrapper {
-  width: 52px;
-  height: 52px;
-  background-color: #2b1b17;
-  position: relative;
-  overflow: visible;
-}
-
-.cell-wrapper.active {
-  background-color: var(--cell-bg);
-}
-
-.cell-number {
-  position: absolute;
-  top: 2px;
-  left: 3px;
-  font-size: 10px;
-  font-weight: bold;
-  color: var(--text-main);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.cell-input {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-family: 'Ngayogyan', serif;
-  font-size: 1.5rem;
-  line-height: 1.1;
-  color: var(--text-main);
-  outline: none;
-  cursor: pointer;
-  padding: 2px 0 0 0;
-  overflow: visible;
-}
-
-.cell-input:focus {
-  background-color: var(--cell-focus);
-}
-
-.cell-input.correct {
-  background-color: var(--cell-correct);
-  color: #1B5E20;
-}
-
-/* Panel Clues */
-.clues-section {
-  flex: 1;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.clues-box {
-  background: #FFF8E7;
-  border: 1px solid var(--accent-color);
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.clues-box h2 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  border-bottom: 2px dashed var(--accent-color);
-  padding-bottom: 5px;
-}
-
-.clue-list {
-  padding-left: 20px;
-  line-height: 1.5;
-  margin-bottom: 0;
-}
-
-.clue-list li {
-  margin-bottom: 8px;
-}
-
-/* Keyboard Virtual (Presisi Tanpa Potong Aksara) */
-.keyboard-container {
-  background-color: #FFF8E7;
-  border: 1px solid var(--accent-color);
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.keyboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  font-weight: bold;
-}
-
-.btn-clear {
-  background-color: #D84315;
-  color: white;
-  border: none;
-  padding: 5px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.keyboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-  gap: 8px;
-}
-
-.key-btn {
-  font-family: 'Ngayogyan', serif;
-  font-size: 1.5rem;
-  height: 50px;
-  background-color: white;
-  border: 1px solid var(--accent-color);
-  border-radius: 6px;
-  color: var(--text-main);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
-  line-height: 1.1;
-  transition: all 0.1s;
-  overflow: visible;
-}
-
-.key-btn:active {
-  transform: scale(0.95);
-  background-color: var(--cell-focus);
-}
-
-/* Modal Popup Victory */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  opacity: 1;
-  transition: opacity 0.3s;
-}
-
-.modal-overlay.hidden {
-  display: none;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.modal-card {
-  background-color: #FFF8E7;
-  border: 2px solid var(--accent-color);
-  border-radius: 12px;
-  padding: 30px;
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-.modal-icon {
-  font-size: 3rem;
-  margin-bottom: 10px;
-}
-
-.modal-card h2 {
-  font-family: 'Ngayogyan', serif;
-  margin: 0 0 10px 0;
-  font-size: 1.8rem;
-  color: var(--text-main);
-}
-
-.modal-card p {
-  margin-bottom: 20px;
-  line-height: 1.4;
-}
-
-.btn-primary {
-  background-color: #2E7D32;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #1B5E20;
-}
+document.addEventListener('DOMContentLoaded', initApp);
