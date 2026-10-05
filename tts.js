@@ -164,7 +164,7 @@ function drawGrid(layout) {
   uiDown.innerHTML = '';
   
   const size = layout.matrix.length;
-  container.style.gridTemplateColumns = `repeat(${size}, 52px)`;
+  container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
   
   const sorted = [...layout.items].sort((a,b) => a.r === b.r ? a.c - b.c : a.r - b.r);
   const numDict = {};
