@@ -23,26 +23,27 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-main);
+  overflow-x: hidden; /* Mencegah geser horizontal seluruh halaman */
 }
 
 .app-container {
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 12px;
 }
 
 .app-header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 15px;
+  padding-bottom: 12px;
 }
 
 .app-header h1 {
   font-family: 'Ngayogyan', serif;
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
   margin: 0 0 5px 0;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .btn-main-lagi {
@@ -50,11 +51,11 @@ body {
   color: #FFF8E7;
   border: none;
   padding: 8px 16px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 6px;
   transition: background-color 0.2s;
 }
 
@@ -62,43 +63,45 @@ body {
   background-color: #3E2723;
 }
 
-/* Tata Letak Utama (Layout) */
+/* Tata Letak Utama (Flexbox) */
 .app-layout {
   display: flex;
   flex-direction: row;
-  gap: 30px;
+  gap: 24px;
   align-items: flex-start;
   justify-content: center;
 }
 
-/* Bagian Board & Keyboard */
 .board-section {
-  flex: 1 1 500px;
-  max-width: 540px;
+  flex: 1 1 480px;
+  max-width: 520px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* Grid Crossword Fluida (Otomatis Pas Layar HP) */
 .grid-container {
   display: grid;
   gap: 2px;
   background-color: var(--text-main);
-  padding: 4px;
+  padding: 3px;
   border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-  margin-bottom: 25px;
-  max-width: 100%;
-  overflow-x: auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1 / 1; /* Menjaga rasio persegi di semua ukuran layar */
 }
 
-/* Ukuran Sel yang Presisi dan Pas di Kotak */
 .cell-wrapper {
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
   background-color: #2b1b17;
   position: relative;
+  overflow: visible;
 }
 
 .cell-wrapper.active {
@@ -107,9 +110,9 @@ body {
 
 .cell-number {
   position: absolute;
-  top: 2px;
-  left: 3px;
-  font-size: 10px;
+  top: 1px;
+  left: 2px;
+  font-size: clamp(7px, 1.8vw, 10px);
   font-weight: bold;
   color: var(--text-main);
   pointer-events: none;
@@ -126,12 +129,13 @@ body {
   justify-content: center;
   text-align: center;
   font-family: 'Ngayogyan', serif;
-  font-size: 1.4rem;
-  line-height: 1.1;
+  /* Ukuran font dinamis menyesuaikan lebar layar HP */
+  font-size: clamp(0.95rem, 3.8vw, 1.5rem);
+  line-height: 1;
   color: var(--text-main);
   outline: none;
   cursor: pointer;
-  padding: 2px 0 0 0;
+  padding: 0;
 }
 
 .cell-input:focus {
@@ -143,56 +147,58 @@ body {
   color: #1B5E20;
 }
 
-/* Bagian Petunjuk (Clues) */
+/* Panel Clues / Petunjuk Soal */
 .clues-section {
-  flex: 1 1 350px;
+  flex: 1 1 320px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .clues-box {
   background: #FFF8E7;
   border: 1px solid var(--accent-color);
   border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  padding: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   width: 100%;
 }
 
 .clues-box h2 {
   margin-top: 0;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   border-bottom: 2px dashed var(--accent-color);
-  padding-bottom: 5px;
+  padding-bottom: 4px;
 }
 
 .clue-list {
-  padding-left: 20px;
-  line-height: 1.5;
+  padding-left: 18px;
+  line-height: 1.4;
   margin-bottom: 0;
+  font-size: 0.95rem;
 }
 
 .clue-list li {
   margin-bottom: 8px;
 }
 
-/* Keyboard Virtual */
+/* Keyboard Virtual Responsif */
 .keyboard-container {
   width: 100%;
   background-color: #FFF8E7;
   border: 1px solid var(--accent-color);
   border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  padding: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .keyboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
   font-weight: bold;
 }
 
@@ -200,22 +206,23 @@ body {
   background-color: #D84315;
   color: white;
   border: none;
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 0.8rem;
 }
 
 .keyboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
   gap: 6px;
 }
 
 .key-btn {
   font-family: 'Ngayogyan', serif;
-  font-size: 1.4rem;
-  height: 46px;
+  font-size: clamp(1.1rem, 4.2vw, 1.5rem);
+  height: clamp(40px, 9vw, 48px);
   background-color: white;
   border: 1px solid var(--accent-color);
   border-radius: 6px;
@@ -224,8 +231,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
-  line-height: 1.1;
+  padding: 0;
+  line-height: 1;
   transition: all 0.1s;
 }
 
@@ -241,7 +248,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -260,27 +267,28 @@ body {
   background-color: #FFF8E7;
   border: 2px solid var(--accent-color);
   border-radius: 12px;
-  padding: 30px;
+  padding: 24px;
   text-align: center;
-  max-width: 400px;
-  width: 90%;
+  max-width: 360px;
+  width: 88%;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
 .modal-icon {
-  font-size: 3rem;
-  margin-bottom: 10px;
+  font-size: 2.5rem;
+  margin-bottom: 8px;
 }
 
 .modal-card h2 {
   font-family: 'Ngayogyan', serif;
-  margin: 0 0 10px 0;
-  font-size: 1.8rem;
+  margin: 0 0 8px 0;
+  font-size: 1.6rem;
   color: var(--text-main);
 }
 
 .modal-card p {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  font-size: 0.95rem;
   line-height: 1.4;
 }
 
@@ -288,27 +296,31 @@ body {
   background-color: #2E7D32;
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
+  padding: 10px 18px;
+  font-size: 0.95rem;
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.btn-primary:hover {
-  background-color: #1B5E20;
-}
+/* Media Query untuk HP / Layar Kecil (< 800px) */
+@media (max-width: 800px) {
+  .app-container {
+    padding: 8px;
+  }
 
-/* Responsif: Menumpuk komponen secara vertikal jika lebar layar di bawah 900px */
-@media (max-width: 900px) {
   .app-layout {
     flex-direction: column;
     align-items: center;
+    gap: 16px;
   }
 
   .board-section, .clues-section {
     max-width: 100%;
     width: 100%;
+  }
+
+  .grid-container {
+    max-width: 100%; /* Memenuhi lebar layar HP secara proporsional */
   }
 }
