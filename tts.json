@@ -1,35 +1,55 @@
 {
   "gridSize": 10,
   "wordBank": [
-    {
-      "id": "w1",
-      "clue": "Kutha ingkang asring sinebut Kota Pelajar (Yogyakarta)",
-      "syllables": ["ꦔ", "ꦪꦺꦴ", "ꦒꦾ", "ꦏꦂ", "ꦠ"],
-      "latinHint": ["nga", "yo", "gya", "kar", "ta"]
-    },
-    {
-      "id": "w2",
-      "clue": "Tiyang ingkang nyerat carita (Penulis)",
-      "syllables": ["ꦥ", "ꦤ꧀", "ꦢꦶ", "ꦠ"],
-      "latinHint": ["pa", "n", "di", "ta"]
-    },
-    {
-      "id": "w3",
-      "clue": "Papan kanggé sinau murid-murid (Sekolah)",
-      "syllables": ["ꦱꦺ", "ꦏꦺꦴ", "ꦭꦃ"],
-      "latinHint": ["se", "ko", "lah"]
-    },
-    {
-      "id": "w4",
-      "clue": "Basa Krama Inggil saking tembung 'Mangan'",
-      "syllables": ["ꦣ", "ꦲꦂ"],
-      "latinHint": ["dha", "har"]
-    },
-    {
-      "id": "w5",
-      "clue": "Arane gamane Raden Arjuna",
-      "syllables": ["ꦥ", "ꦤꦃ"],
-      "latinHint": ["pa", "nah"]
-    }
+    { "id": "w1", "clue": "Kutha ingkang asring sinebut Kota Pelajar (Yogyakarta)", "syllables": ["ꦔ", "ꦪꦺꦴ", "ꦒꦾ", "ꦏꦂ", "ꦠ"] },
+    { "id": "w2", "clue": "Tiyang ingkang nyerat carita utawi ulama (Pandhita)", "syllables": ["ꦥ", "ꦤ꧀", "ꦢꦶ", "ꦠ"] },
+    { "id": "w3", "clue": "Papan kanggé sinau murid-murid (Sekolah)", "syllables": ["ꦱꦺ", "ꦏꦺꦴ", "ꦭꦃ"] },
+    { "id": "w4", "clue": "Basa Krama Inggil saking tembung 'Mangan' (Dhahar)", "syllables": ["ꦣ", "ꦲꦂ"] },
+    { "id": "w5", "clue": "Gamanipun Raden Arjuna (Panah)", "syllables": ["ꦥ", "ꦤꦃ"] },
+    { "id": "w6", "clue": "Sato kewan galak ing alas (Macan)", "syllables": ["ꦩ", "ꦕ", "ꦤ꧀"] },
+    { "id": "w7", "clue": "Sato kewan kang duwe taring lan tawa (Gajah)", "syllables": ["ꦒ", "ꦗꦃ"] },
+    { "id": "w8", "clue": "Tumpangan ingkang ditarik kusir (Jaran)", "syllables": ["ꦗ", "ꦫ", "ꦤ꧀"] },
+    { "id": "w9", "clue": "Papan wiyar isi banyu asin (Segara)", "syllables": ["ꦱ", "ꦒ", "ꦫ"] },
+    { "id": "w10", "clue": "Simbol ing pewayangan utawi sekaten (Gunungan)", "syllables": ["ꦒꦸ", "ꦤꦸ", "ꦔ", "ꦤ꧀"] },
+    { "id": "w11", "clue": "Papan kanggo nandur pari (Sawah)", "syllables": ["ꦱ", "ꦮꦃ"] },
+    { "id": "w12", "clue": "Papan dununge kulawarga (Omah)", "syllables": ["ꦲꦺꦴ", "ꦩꦃ"] },
+    { "id": "w13", "clue": "Kesenian kulit utawa golek (Wayang)", "syllables": ["ꦮ", "ꦪꦁ"] },
+    { "id": "w14", "clue": "Papan padalemanipun Raja/Sultan (Keraton)", "syllables": ["ꦏ", "ꦫ", "ꦠꦺꦴ", "ꦤ꧀"] },
+    { "id": "w15", "clue": "Sebutan kramane Bapak (Bapa)", "syllables": ["ꦧ", "ꦥ"] },
+    { "id": "w16", "clue": "Wong wadon kang nglairake (Ibu)", "syllables": ["ꦲꦶ", "ꦧꦸ"] },
+    { "id": "w17", "clue": "Sedherek sejeroning kulawarga (Sedulur)", "syllables": ["ꦱꦺ", "ꦢꦸ", "ꦭꦸꦂ"] },
+    { "id": "w18", "clue": "Ngestokake panganan mlebu weteng (Mangan)", "syllables": ["ꦩ", "ꦔ", "ꦤ꧀"] },
+    { "id": "w19", "clue": "Leren lan merem ing paturon (Turu)", "syllables": ["ꦠꦸ", "ꦫꦸ"] },
+    { "id": "w20", "clue": "Mbayar barang nganggo dhuwit (Tuku)", "syllables": ["ꦠꦸ", "ꦏꦸ"] },
+    { "id": "w21", "clue": "Piranti kanggo resik-resik jogan (Sapu)", "syllables": ["ꦱ", "ꦥꦸ"] },
+    { "id": "w22", "clue": "Lembaran kertas kang ana tulisane (Buku)", "syllables": ["ꦧꦸ", "ꦏꦸ"] },
+    { "id": "w23", "clue": "Benda atos ing latar utawa kali (Watu)", "syllables": ["ꦮ", "ꦠꦸ"] },
+    { "id": "w24", "clue": "Cairan bening kanggo ngombe (Banyu)", "syllables": ["ꦧ", "ꦚꦸ"] },
+    { "id": "w25", "clue": "Hawa panas kang nggawe obong (Geni)", "syllables": ["ꦒꦺ", "ꦤꦶ"] },
+    { "id": "w26", "clue": "Hawa kang semilir ngidid (Angin)", "syllables": ["ꦲ", "ꦔꦶ", "ꦤ꧀"] },
+    { "id": "w27", "clue": "Srengenge bunder nalika wengi (Rembulan)", "syllables": ["ꦉ", "ꦩ꧀", "ꦧꦸ", "ꦭ", "ꦤ꧀"] },
+    { "id": "w28", "clue": "Benda langit kang sumunar wengi (Lintang)", "syllables": ["ꦭꦶ", "ꦤ꧀", "ꦠꦁ"] },
+    { "id": "w29", "clue": "Kewan unggas ingkang kluruk (Pitik)", "syllables": ["ꦥꦶ", "ꦠꦶ", "ꦏ꧀"] },
+    { "id": "w30", "clue": "Unggas kang seneng nglangi ing banyu (Bebek)", "syllables": ["ꦧꦺ", "ꦧꦺ", "ꦏ꧀"] },
+    { "id": "w31", "clue": "Kewan miber ing awang-awang (Manuk)", "syllables": ["ꦩ", "ꦤꦸ", "ꦏ꧀"] },
+    { "id": "w32", "clue": "Kewan seng urip ing njero banyu (Iwak)", "syllables": ["ꦲꦶ", "ꦮ", "ꦏ꧀"] },
+    { "id": "w33", "clue": "Gamelan kang ditabuh ngganggo kayu (Gamelan)", "syllables": ["ꦒ", "ꦩꦺ", "ꦭ", "ꦤ꧀"] },
+    { "id": "w34", "clue": "Gamelan kulit kang ditabuh nganggo tangan (Kendang)", "syllables": ["ꦏꦺ", "ꦤ꧀", "ꦢꦁ"] },
+    { "id": "w35", "clue": "Gamelan gantung kang suarane bleng (Gong)", "syllables": ["ꦒꦺꦴ", "ꦁ"] },
+    { "id": "w36", "clue": "Gamelan bilah perunggu (Saron)", "syllables": ["ꦱ", "ꦫꦺꦴ", "ꦤ꧀"] },
+    { "id": "w37", "clue": "Gamelan wujud pencu kaya pencon (Bonang)", "syllables": ["ꦧꦺꦴ", "ꦤꦁ"] },
+    { "id": "w38", "clue": "Gamelan sebul saka pring (Suling)", "syllables": ["ꦱꦸ", "ꦭꦶ", "ꦁ"] },
+    { "id": "w39", "clue": "Wong kang nglakokake wayang (Dhalang)", "syllables": ["ꦝ", "ꦭꦁ"] },
+    { "id": "w40", "clue": "Wong wadon kang nembang ing gamelan (Sinden)", "syllables": ["ꦱꦶ", "ꦤ꧀", "ꦢꦺ", "ꦤ꧀"] },
+    { "id": "w41", "clue": "Wilayah pemukiman utawa desa (Kampung)", "syllables": ["ꦏ", "ꦩ꧀", "ꦥꦸ", "ꦁ"] },
+    { "id": "w42", "clue": "Tembung donga wilujeng (Rahayu)", "syllables": ["ꦫ", "ꦲ", "ꦪꦸ"] },
+    { "id": "w43", "clue": "Basa kramane 'Slamet' utawa bebas bebaya (Slamet)", "syllables": ["ꦱ꧀", "ꦭ", "ꦩꦺ", "ꦠ꧀"] },
+    { "id": "w44", "clue": "Sebutan bojo ing basa krama (Garwa)", "syllables": ["ꦒ", "ꦂ", "ꦮ"] },
+    { "id": "w45", "clue": "Anak lanang ing basa krama (Putra)", "syllables": ["ꦥꦸ", "ꦠꦿ"] },
+    { "id": "w46", "clue": "Anak wadon ing basa krama (Putri)", "syllables": ["ꦥꦸ", "ꦠꦿꦶ"] },
+    { "id": "w47", "clue": "Kewan cilik cerdik ing dongeng (Kancil)", "syllables": ["ꦏ", "ꦤ꧀", "ꦕꦶ", "ꦭ꧀"] },
+    { "id": "w48", "clue": "Kewan buas ing kali (Baya)", "syllables": ["ꦧ", "ꦪ"] },
+    { "id": "w49", "clue": "Kembang ingkang arum ambune (Melati)", "syllables": ["ꦩꦺ", "ꦭ", "ꦠꦶ"] },
+    { "id": "w50", "clue": "Godhong seng bisa digawe obat (Sirih)", "syllables": ["ꦱꦶ", "ꦫꦶ", "ꦃ"] }
   ]
 }
