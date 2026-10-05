@@ -1,0 +1,35 @@
+{
+  "gridSize": 10,
+  "wordBank": [
+    {
+      "id": "w1",
+      "clue": "Kutha ingkang asring sinebut Kota Pelajar (Yogyakarta)",
+      "syllables": ["ꦔ", "ꦪꦺꦴ", "ꦒꦾ", "ꦏꦂ", "ꦠ"],
+      "latinHint": ["nga", "yo", "gya", "kar", "ta"]
+    },
+    {
+      "id": "w2",
+      "clue": "Tiyang ingkang nyerat carita (Penulis)",
+      "syllables": ["ꦥ", "ꦤ꧀", "ꦢꦶ", "ꦠ"],
+      "latinHint": ["pa", "n", "di", "ta"]
+    },
+    {
+      "id": "w3",
+      "clue": "Papan kanggé sinau murid-murid (Sekolah)",
+      "syllables": ["ꦱꦺ", "ꦏꦺꦴ", "ꦭꦃ"],
+      "latinHint": ["se", "ko", "lah"]
+    },
+    {
+      "id": "w4",
+      "clue": "Basa Krama Inggil saking tembung 'Mangan'",
+      "syllables": ["ꦣ", "ꦲꦂ"],
+      "latinHint": ["dha", "har"]
+    },
+    {
+      "id": "w5",
+      "clue": "Arane gamane Raden Arjuna",
+      "syllables": ["ꦥ", "ꦤꦃ"],
+      "latinHint": ["pa", "nah"]
+    }
+  ]
+}
